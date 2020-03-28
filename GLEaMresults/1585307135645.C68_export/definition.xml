@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation xmlns="http://www.gleamviz.org/xmlns/gleamviz_v4_0">
+  <definition name="COVID_China_Wuhan_26.03" type="multi-run" id="1585307135645.C68">
+    <compartmentalModel>
+      <compartments>
+        <compartment y="24" isCarrier="false" color="#51b2b7" x="680" id="susceptible" isCommuter="true" isSecondary="false" isTraveller="true"/>
+        <compartment y="218" isCarrier="true" color="#00c18d" x="680" id="latent non-infectious" isCommuter="true" isSecondary="false" isTraveller="true"/>
+        <compartment y="499" isCarrier="true" color="#f4ce17" x="678" id="diagnosed" isCommuter="false" isSecondary="true" isTraveller="false"/>
+        <compartment y="689" isCarrier="false" color="#89c443" x="678" id="recovered" isCommuter="true" isSecondary="false" isTraveller="true"/>
+        <compartment y="319" isCarrier="true" color="#ff5127" x="679" id="presyndromatic inf." isCommuter="true" isSecondary="false" isTraveller="true"/>
+        <compartment y="408" isCarrier="true" color="#ff5127" x="449" id="mild syndromes" isCommuter="true" isSecondary="false" isTraveller="true"/>
+        <compartment y="407" isCarrier="true" color="#f59123" x="888" id="severe syndromes" isCommuter="false" isSecondary="false" isTraveller="false"/>
+      </compartments>
+      <ratioTransitions>
+        <ratioTransition source="diagnosed" ratio="(1/mu)" labelPosition="0.5" target="recovered"/>
+        <ratioTransition source="latent non-infectious" ratio="nie" labelPosition="0.5" target="presyndromatic inf."/>
+        <ratioTransition source="presyndromatic inf." ratio="ie*(1-ps)" labelPosition="0.5" target="mild syndromes"/>
+        <ratioTransition source="presyndromatic inf." ratio="ie*ps" labelPosition="0.5" target="severe syndromes"/>
+        <ratioTransition source="severe syndromes" ratio="(1/mu)*pDS" labelPosition="0.5" target="diagnosed"/>
+        <ratioTransition source="mild syndromes" ratio="(1/mu)*pDM" labelPosition="0.5" target="diagnosed"/>
+        <ratioTransition source="mild syndromes" ratio="(1/mu)*(1-pDM)" labelPosition="0.5" target="recovered"/>
+        <ratioTransition source="severe syndromes" ratio="(1/mu)*(1-pDS)" labelPosition="0.5" target="recovered"/>
+      </ratioTransitions>
+      <infections>
+        <infection source="susceptible" target="latent non-infectious">
+          <infector y="62" source="presyndromatic inf." ratio="beta" x="356"/>
+          <infector y="120" source="mild syndromes" ratio="beta" x="357"/>
+          <infector y="178" source="severe syndromes" ratio="beta*rbeta" x="358"/>
+        </infection>
+      </infections>
+      <variables>
+        <variable value="0.38261" name="beta"/>
+        <variable value="0.5" name="rbeta"/>
+        <variable value="5.6" name="lp"/>
+        <variable value="1.1" name="lnip"/>
+        <variable value="4.5" name="pip"/>
+        <variable value="1/lnip" name="nie"/>
+        <variable value="1/(lp-lnip)" name="ie"/>
+        <variable value="0.01" name="ps"/>
+        <variable value="0.6" name="pDS"/>
+        <variable value="0.0061" name="tDR"/>
+        <variable value="(tDR-ps*pDS)/(1-ps)" name="pDM"/>
+        <variable value="7" name="mu"/>
+      </variables>
+    </compartmentalModel>
+    <parameters secondaryEvents="1" flightsTimeAggregation="month" startDate="2019-11-12" outbreakSize="2" commutingRate="8" seasonalityEnabled="false" runCount="10" commutingModel="radiation" duration="135" occupancyRate="100" seasonalityAlphaMin="0.50"/>
+    <notes>Run19</notes>
+    <initialCompartments>
+      <initialCompartment fraction="100" compartment="susceptible"/>
+    </initialCompartments>
+    <seeds>
+      <seed compartment="presyndromatic inf." number="1" city="477"/>
+    </seeds>
+    <resultCompartments>
+      <id>presyndromatic inf.</id>
+      <id>mild syndromes</id>
+      <id>severe syndromes</id>
+      <id>latent non-infectious</id>
+      <id>diagnosed</id>
+    </resultCompartments>
+    <exceptions/>
+  </definition>
+  <metadata>
+    <creationDate>2020-03-14T18:29:01</creationDate>
+    <clientVersion>7.0</clientVersion>
+  </metadata>
+  <extradata>
+    <userVariableOrder>beta rbeta lp lnip pip nie ie ps pDS tDR pDM mu</userVariableOrder>
+  </extradata>
+</simulation>
